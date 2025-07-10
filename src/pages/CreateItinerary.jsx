@@ -18,7 +18,6 @@ const CreateItinerary = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
@@ -57,143 +56,134 @@ const CreateItinerary = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Create New Itinerary</h1>
-          <button
-            onClick={() => navigate("/itineraries")}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
-          >
-            Cancel
-          </button>
-        </div>
+    <div>
+      <div className="flex-between mb-2">
+        <h1>Create New Itinerary</h1>
+        <button
+          onClick={() => navigate("/itineraries")}
+          className="btn btn-secondary"
+        >
+          Cancel
+        </button>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="card">
+        <form onSubmit={handleSubmit}>
           {errors.submit && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <div style={{
+              backgroundColor: '#fee',
+              border: '1px solid #fcc',
+              color: '#c33',
+              padding: '10px',
+              borderRadius: '5px',
+              marginBottom: '20px'
+            }}>
               {errors.submit}
             </div>
           )}
 
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
-            </label>
+          <div className="form-group">
+            <label htmlFor="title">Title *</label>
             <input
               type="text"
               id="title"
               name="title"
               value={form.title}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.title ? 'border-red-300' : 'border-gray-300'
-              }`}
+              className="form-control"
               placeholder="Enter itinerary title"
+              style={errors.title ? {borderColor: '#e74c3c'} : {}}
             />
-            {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
+            {errors.title && <small style={{color: '#e74c3c'}}>{errors.title}</small>}
           </div>
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
-            </label>
+          <div className="form-group">
+            <label htmlFor="description">Description *</label>
             <textarea
               id="description"
               name="description"
               rows={4}
               value={form.description}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.description ? 'border-red-300' : 'border-gray-300'
-              }`}
+              className="form-control"
               placeholder="Describe the itinerary in detail"
+              style={errors.description ? {borderColor: '#e74c3c'} : {}}
             />
-            {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+            {errors.description && <small style={{color: '#e74c3c'}}>{errors.description}</small>}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
-                Duration *
-              </label>
+          <div className="grid grid-2">
+            <div className="form-group">
+              <label htmlFor="duration">Duration *</label>
               <input
                 type="text"
                 id="duration"
                 name="duration"
                 value={form.duration}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.duration ? 'border-red-300' : 'border-gray-300'
-                }`}
+                className="form-control"
                 placeholder="e.g., 7 days, 2 weeks"
+                style={errors.duration ? {borderColor: '#e74c3c'} : {}}
               />
-              {errors.duration && <p className="mt-1 text-sm text-red-600">{errors.duration}</p>}
+              {errors.duration && <small style={{color: '#e74c3c'}}>{errors.duration}</small>}
             </div>
 
-            <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                Price *
-              </label>
+            <div className="form-group">
+              <label htmlFor="price">Price *</label>
               <input
                 type="text"
                 id="price"
                 name="price"
                 value={form.price}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.price ? 'border-red-300' : 'border-gray-300'
-                }`}
+                className="form-control"
                 placeholder="e.g., $1,500, €2,000"
+                style={errors.price ? {borderColor: '#e74c3c'} : {}}
               />
-              {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
+              {errors.price && <small style={{color: '#e74c3c'}}>{errors.price}</small>}
             </div>
           </div>
 
-          <div>
-            <label htmlFor="destinations" className="block text-sm font-medium text-gray-700 mb-2">
-              Destinations
-            </label>
+          <div className="form-group">
+            <label htmlFor="destinations">Destinations</label>
             <input
               type="text"
               id="destinations"
               name="destinations"
               value={form.destinations}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="form-control"
               placeholder="Paris, Rome, Barcelona (comma-separated)"
             />
-            <p className="mt-1 text-sm text-gray-500">Separate multiple destinations with commas</p>
+            <small style={{color: '#7f8c8d'}}>Separate multiple destinations with commas</small>
           </div>
 
-          <div>
-            <label htmlFor="highlights" className="block text-sm font-medium text-gray-700 mb-2">
-              Highlights
-            </label>
+          <div className="form-group">
+            <label htmlFor="highlights">Highlights</label>
             <textarea
               id="highlights"
               name="highlights"
               rows={3}
               value={form.highlights}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="form-control"
               placeholder="Eiffel Tower visit, Colosseum tour, Beach relaxation (comma-separated)"
             />
-            <p className="mt-1 text-sm text-gray-500">Separate multiple highlights with commas</p>
+            <small style={{color: '#7f8c8d'}}>Separate multiple highlights with commas</small>
           </div>
 
-          <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+          <div className="flex" style={{justifyContent: 'flex-end', gap: '10px', paddingTop: '20px', borderTop: '1px solid #eee'}}>
             <button
               type="button"
               onClick={() => navigate("/itineraries")}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200"
+              className="btn btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              className="btn btn-success"
             >
               {loading ? "Creating..." : "Create Itinerary"}
             </button>
