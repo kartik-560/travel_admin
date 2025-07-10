@@ -1,6 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getItineraries } from "../api/itineraries";
+// import { getItineraries } from "../api/itineraries";
+
+// Mock data for demonstration purposes
+const mockItineraries = [
+  {
+    _id: "1",
+    title: "Paris Adventure",
+    description: "Explore the City of Light with visits to the Eiffel Tower, Louvre Museum, and charming cafes along the Seine."
+  },
+  {
+    _id: "2", 
+    title: "Tokyo Discovery",
+    description: "Experience modern Japan with traditional temples, bustling markets, and incredible cuisine in the world's largest city."
+  },
+  {
+    _id: "3",
+    title: "New York Highlights",
+    description: "See the best of the Big Apple including Central Park, Times Square, and world-class museums and Broadway shows."
+  }
+];
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -11,14 +30,23 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await getItineraries();
-        const itineraries = res.data || [];
+        // Simulate API call with mock data
+        // const res = await getItineraries();
+        // const itineraries = res.data || [];
+        
+        // Using mock data until backend is available
+        const itineraries = mockItineraries;
         setStats({
           totalItineraries: itineraries.length,
           recentItineraries: itineraries.slice(0, 3)
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
+        // Fallback to empty state if there's still an error
+        setStats({
+          totalItineraries: 0,
+          recentItineraries: []
+        });
       }
     };
 
