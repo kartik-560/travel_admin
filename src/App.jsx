@@ -10,18 +10,18 @@ import EditItinerary from "./pages/EditItinerary";
 const App = () => {
   return (
     <Router>
-      <div className="app-container">
+      <div className="flex h-screen bg-gray-50">
         <Sidebar />
-        <div className="main-content">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <Navbar />
-          <div className="content">
+          <main className="flex-1 overflow-y-auto p-6">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/itineraries" element={<ItinerariesList />} />
               <Route path="/create" element={<CreateItinerary />} />
               <Route path="/edit/:id" element={<EditItinerary />} />
             </Routes>
-          </div>
+          </main>
         </div>
       </div>
     </Router>

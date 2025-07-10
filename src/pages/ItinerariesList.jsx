@@ -43,37 +43,39 @@ const ItinerariesList = () => {
 
   if (loading) {
     return (
-      <div className="loading">
-        <div className="spinner"></div>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex-between mb-2">
-        <h1>All Itineraries</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-900">All Itineraries</h1>
         <Link to="/create" className="btn btn-primary">
           Create New
         </Link>
       </div>
 
       {/* Search */}
-      <div className="search-container">
+      <div className="card">
         <input
           type="text"
           placeholder="Search itineraries..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
+          className="form-input"
         />
       </div>
 
       {/* Stats */}
-      <div className="card mb-2">
-        <div className="flex-between">
-          <span>Showing {filteredItineraries.length} of {itineraries.length} itineraries</span>
+      <div className="card">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-600">
+            Showing {filteredItineraries.length} of {itineraries.length} itineraries
+          </span>
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
@@ -87,7 +89,7 @@ const ItinerariesList = () => {
 
       {/* Itineraries Grid */}
       {filteredItineraries.length > 0 ? (
-        <div className="grid grid-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItineraries.map((itinerary) => (
             <ItineraryCard
               key={itinerary._id}
@@ -99,16 +101,19 @@ const ItinerariesList = () => {
         </div>
       ) : (
         <div className="card">
-          <div className="empty-state">
-            <h3>{searchTerm ? "No matching itineraries" : "No itineraries found"}</h3>
-            <p>
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {searchTerm ? "No matching itineraries" : "No itineraries found"}
+            </h3>
+            <p className="text-gray-600 mb-4">
               {searchTerm 
                 ? "Try adjusting your search terms" 
                 : "Get started by creating your first itinerary."
               }
             </p>
             {!searchTerm && (
-              <Link to="/create" className="btn btn-primary mt-1">
+              <Link to="/create" className="btn btn-primary">
                 Create Itinerary
               </Link>
             )}
@@ -118,11 +123,13 @@ const ItinerariesList = () => {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Delete Itinerary</h3>
-            <p>Are you sure you want to delete this itinerary? This action cannot be undone.</p>
-            <div className="modal-actions">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Delete Itinerary</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this itinerary? This action cannot be undone.
+            </p>
+            <div className="flex space-x-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="btn btn-secondary"

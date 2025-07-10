@@ -56,9 +56,9 @@ const CreateItinerary = () => {
   };
 
   return (
-    <div>
-      <div className="flex-between mb-2">
-        <h1>Create New Itinerary</h1>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-900">Create New Itinerary</h1>
         <button
           onClick={() => navigate("/itineraries")}
           className="btn btn-secondary"
@@ -68,111 +68,112 @@ const CreateItinerary = () => {
       </div>
 
       <div className="card">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           {errors.submit && (
-            <div style={{
-              backgroundColor: '#fee',
-              border: '1px solid #fcc',
-              color: '#c33',
-              padding: '10px',
-              borderRadius: '5px',
-              marginBottom: '20px'
-            }}>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
               {errors.submit}
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="title">Title *</label>
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              Title *
+            </label>
             <input
               type="text"
               id="title"
               name="title"
               value={form.title}
               onChange={handleChange}
-              className="form-control"
+              className={`form-input ${errors.title ? 'border-red-500' : ''}`}
               placeholder="Enter itinerary title"
-              style={errors.title ? {borderColor: '#e74c3c'} : {}}
             />
-            {errors.title && <small style={{color: '#e74c3c'}}>{errors.title}</small>}
+            {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="description">Description *</label>
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              Description *
+            </label>
             <textarea
               id="description"
               name="description"
               rows={4}
               value={form.description}
               onChange={handleChange}
-              className="form-control"
+              className={`form-input ${errors.description ? 'border-red-500' : ''}`}
               placeholder="Describe the itinerary in detail"
-              style={errors.description ? {borderColor: '#e74c3c'} : {}}
             />
-            {errors.description && <small style={{color: '#e74c3c'}}>{errors.description}</small>}
+            {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
           </div>
 
-          <div className="grid grid-2">
-            <div className="form-group">
-              <label htmlFor="duration">Duration *</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
+                Duration *
+              </label>
               <input
                 type="text"
                 id="duration"
                 name="duration"
                 value={form.duration}
                 onChange={handleChange}
-                className="form-control"
+                className={`form-input ${errors.duration ? 'border-red-500' : ''}`}
                 placeholder="e.g., 7 days, 2 weeks"
-                style={errors.duration ? {borderColor: '#e74c3c'} : {}}
               />
-              {errors.duration && <small style={{color: '#e74c3c'}}>{errors.duration}</small>}
+              {errors.duration && <p className="mt-1 text-sm text-red-600">{errors.duration}</p>}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="price">Price *</label>
+            <div>
+              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
+                Price *
+              </label>
               <input
                 type="text"
                 id="price"
                 name="price"
                 value={form.price}
                 onChange={handleChange}
-                className="form-control"
+                className={`form-input ${errors.price ? 'border-red-500' : ''}`}
                 placeholder="e.g., $1,500, €2,000"
-                style={errors.price ? {borderColor: '#e74c3c'} : {}}
               />
-              {errors.price && <small style={{color: '#e74c3c'}}>{errors.price}</small>}
+              {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="destinations">Destinations</label>
+          <div>
+            <label htmlFor="destinations" className="block text-sm font-medium text-gray-700 mb-2">
+              Destinations
+            </label>
             <input
               type="text"
               id="destinations"
               name="destinations"
               value={form.destinations}
               onChange={handleChange}
-              className="form-control"
+              className="form-input"
               placeholder="Paris, Rome, Barcelona (comma-separated)"
             />
-            <small style={{color: '#7f8c8d'}}>Separate multiple destinations with commas</small>
+            <p className="mt-1 text-sm text-gray-500">Separate multiple destinations with commas</p>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="highlights">Highlights</label>
+          <div>
+            <label htmlFor="highlights" className="block text-sm font-medium text-gray-700 mb-2">
+              Highlights
+            </label>
             <textarea
               id="highlights"
               name="highlights"
               rows={3}
               value={form.highlights}
               onChange={handleChange}
-              className="form-control"
+              className="form-input"
               placeholder="Eiffel Tower visit, Colosseum tour, Beach relaxation (comma-separated)"
             />
-            <small style={{color: '#7f8c8d'}}>Separate multiple highlights with commas</small>
+            <p className="mt-1 text-sm text-gray-500">Separate multiple highlights with commas</p>
           </div>
 
-          <div className="flex" style={{justifyContent: 'flex-end', gap: '10px', paddingTop: '20px', borderTop: '1px solid #eee'}}>
+          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
             <button
               type="button"
               onClick={() => navigate("/itineraries")}
