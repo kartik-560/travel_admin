@@ -15,8 +15,6 @@ const App = () => {
         <div className="flex-1 flex flex-col">
           <Navbar />
           <div className="p-6 bg-gray-100 h-full overflow-y-auto">
-            <h1 className="text-4xl font-bold text-blue-600">Tailwind is working!</h1>
-
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/itineraries" element={<ItinerariesList />} />

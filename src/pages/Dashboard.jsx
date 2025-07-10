@@ -1,10 +1,139 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getItineraries } from "../api/itineraries";
 
-const Dashboard = () => (
-  <div>
-    <h2>Dashboard</h2>
-    <p>Welcome to the admin panel!</p>
-  </div>
-);
+const Dashboard = () => {
+  const [stats, setStats] = useState({
+    totalItineraries: 0,
+    recentItineraries: []
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await getItineraries();
+        const itineraries = res.data || [];
+        setStats({
+          totalItineraries: itineraries.length,
+          recentItineraries: itineraries.slice(0, 3)
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <Link
+          to="/create"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+        >
+          Create New Itinerary
+        </Link>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center">
+            <div className="p-3 bg-blue-100 rounded-full">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Total Itineraries</p>
+              <p className="text-2xl font-semibold text-gray-900">{stats.totalItineraries}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center">
+            <div className="p-3 bg-green-100 rounded-full">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Active Tours</p>
+              <p className="text-2xl font-semibold text-gray-900">{Math.floor(stats.totalItineraries * 0.7)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center">
+            <div className="p-3 bg-yellow-100 rounded-full">
+              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Revenue</p>
+              <p className="text-2xl font-semibold text-gray-900">$12,450</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Itineraries */}
+      <div className="bg-white rounded-lg shadow-md">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-800">Recent Itineraries</h2>
+            <Link
+              to="/itineraries"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >
+              View All
+            </Link>
+          </div>
+        </div>
+        <div className="p-6">
+          {stats.recentItineraries.length > 0 ? (
+            <div className="space-y-4">
+              {stats.recentItineraries.map((itinerary) => (
+                <div key={itinerary._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <h3 className="font-medium text-gray-800">{itinerary.title}</h3>
+                    <p className="text-sm text-gray-600 mt-1">{itinerary.description?.substring(0, 100)}...</p>
+                  </div>
+                  <Link
+                    to={`/edit/${itinerary._id}`}
+                    className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-md hover:bg-blue-200 transition-colors duration-200"
+                  >
+                    Edit
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No itineraries</h3>
+              <p className="mt-1 text-sm text-gray-500">Get started by creating a new itinerary.</p>
+              <div className="mt-6">
+                <Link
+                  to="/create"
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  Create Itinerary
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Dashboard;
