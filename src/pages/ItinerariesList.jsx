@@ -36,9 +36,10 @@ const ItinerariesList = () => {
     }
   };
 
-  const filteredItineraries = itineraries.filter(itinerary =>
-    itinerary.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    itinerary.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredItineraries = itineraries.filter(
+    (itinerary) =>
+      itinerary.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      itinerary.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -74,7 +75,8 @@ const ItinerariesList = () => {
       <div className="card">
         <div className="flex items-center justify-between">
           <span className="text-gray-600">
-            Showing {filteredItineraries.length} of {itineraries.length} itineraries
+            Showing {filteredItineraries.length} of {itineraries.length}{" "}
+            itineraries
           </span>
           {searchTerm && (
             <button
@@ -92,9 +94,9 @@ const ItinerariesList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItineraries.map((itinerary) => (
             <ItineraryCard
-              key={itinerary._id}
+              key={itinerary.id}
               itinerary={itinerary}
-              onEdit={(id) => navigate(`/edit/${id}`)}
+              onEdit={(id) => navigate(`/itineraries/edit/${id}`)} // ✅ Correct
               onDelete={(id) => setDeleteConfirm(id)}
             />
           ))}
@@ -107,10 +109,9 @@ const ItinerariesList = () => {
               {searchTerm ? "No matching itineraries" : "No itineraries found"}
             </h3>
             <p className="text-gray-600 mb-4">
-              {searchTerm 
-                ? "Try adjusting your search terms" 
-                : "Get started by creating your first itinerary."
-              }
+              {searchTerm
+                ? "Try adjusting your search terms"
+                : "Get started by creating your first itinerary."}
             </p>
             {!searchTerm && (
               <Link to="/create" className="btn btn-primary">
@@ -125,9 +126,12 @@ const ItinerariesList = () => {
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Delete Itinerary</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Delete Itinerary
+            </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this itinerary? This action cannot be undone.
+              Are you sure you want to delete this itinerary? This action cannot
+              be undone.
             </p>
             <div className="flex space-x-3 justify-end">
               <button
