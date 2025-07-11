@@ -1,7 +1,7 @@
 import React from "react";
 
 const ItineraryCard = ({ itinerary, onEdit, onDelete }) => (
-  <div className="card hover:shadow-lg transition-shadow duration-200">
+  <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
     <h3 className="text-xl font-semibold text-gray-900 mb-3">{itinerary.title}</h3>
     <p className="text-gray-600 mb-4 line-clamp-3">{itinerary.description}</p>
     
