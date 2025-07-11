@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createItinerary } from "../api/itineraries";
+import './CreateItinerary.css';
 
 const CreateItinerary = () => {
   const [form, setForm] = useState({
@@ -56,9 +57,9 @@ const CreateItinerary = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Create New Itinerary</h1>
+    <div className="create-itinerary">
+      <div className="create-header">
+        <h1 className="create-title">Create New Itinerary</h1>
         <button
           onClick={() => navigate("/itineraries")}
           className="btn btn-secondary"
@@ -68,15 +69,15 @@ const CreateItinerary = () => {
       </div>
 
       <div className="card">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="create-form">
           {errors.submit && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="alert alert-error">
               {errors.submit}
             </div>
           )}
 
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="form-group">
+            <label htmlFor="title" className="form-label">
               Title *
             </label>
             <input
@@ -85,14 +86,14 @@ const CreateItinerary = () => {
               name="title"
               value={form.title}
               onChange={handleChange}
-              className={`form-input ${errors.title ? 'border-red-500' : ''}`}
+              className={`form-input ${errors.title ? 'error' : ''}`}
               placeholder="Enter itinerary title"
             />
-            {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
+            {errors.title && <p className="form-error">{errors.title}</p>}
           </div>
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="form-group">
+            <label htmlFor="description" className="form-label">
               Description *
             </label>
             <textarea
@@ -101,15 +102,15 @@ const CreateItinerary = () => {
               rows={4}
               value={form.description}
               onChange={handleChange}
-              className={`form-input ${errors.description ? 'border-red-500' : ''}`}
+              className={`form-input ${errors.description ? 'error' : ''}`}
               placeholder="Describe the itinerary in detail"
             />
-            {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+            {errors.description && <p className="form-error">{errors.description}</p>}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="duration" className="form-label">
                 Duration *
               </label>
               <input
@@ -118,14 +119,14 @@ const CreateItinerary = () => {
                 name="duration"
                 value={form.duration}
                 onChange={handleChange}
-                className={`form-input ${errors.duration ? 'border-red-500' : ''}`}
+                className={`form-input ${errors.duration ? 'error' : ''}`}
                 placeholder="e.g., 7 days, 2 weeks"
               />
-              {errors.duration && <p className="mt-1 text-sm text-red-600">{errors.duration}</p>}
+              {errors.duration && <p className="form-error">{errors.duration}</p>}
             </div>
 
-            <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="price" className="form-label">
                 Price *
               </label>
               <input
@@ -134,15 +135,15 @@ const CreateItinerary = () => {
                 name="price"
                 value={form.price}
                 onChange={handleChange}
-                className={`form-input ${errors.price ? 'border-red-500' : ''}`}
+                className={`form-input ${errors.price ? 'error' : ''}`}
                 placeholder="e.g., $1,500, €2,000"
               />
-              {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
+              {errors.price && <p className="form-error">{errors.price}</p>}
             </div>
           </div>
 
-          <div>
-            <label htmlFor="destinations" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="form-group">
+            <label htmlFor="destinations" className="form-label">
               Destinations
             </label>
             <input
@@ -154,11 +155,11 @@ const CreateItinerary = () => {
               className="form-input"
               placeholder="Paris, Rome, Barcelona (comma-separated)"
             />
-            <p className="mt-1 text-sm text-gray-500">Separate multiple destinations with commas</p>
+            <p className="form-help">Separate multiple destinations with commas</p>
           </div>
 
-          <div>
-            <label htmlFor="highlights" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="form-group">
+            <label htmlFor="highlights" className="form-label">
               Highlights
             </label>
             <textarea
@@ -170,10 +171,10 @@ const CreateItinerary = () => {
               className="form-input"
               placeholder="Eiffel Tower visit, Colosseum tour, Beach relaxation (comma-separated)"
             />
-            <p className="mt-1 text-sm text-gray-500">Separate multiple highlights with commas</p>
+            <p className="form-help">Separate multiple highlights with commas</p>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+          <div className="form-actions">
             <button
               type="button"
               onClick={() => navigate("/itineraries")}

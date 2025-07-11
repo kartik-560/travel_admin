@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getItineraries, deleteItinerary } from "../api/itineraries";
 import ItineraryCard from "../components/ItineraryCard";
+import './ItinerariesList.css';
 
 const ItinerariesList = () => {
   const [itineraries, setItineraries] = useState([]);
@@ -43,17 +44,17 @@ const ItinerariesList = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="itineraries-list">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">All Itineraries</h1>
+      <div className="list-header">
+        <h1 className="list-title">All Itineraries</h1>
         <Link to="/create" className="btn btn-primary">
           Create New
         </Link>
@@ -72,8 +73,8 @@ const ItinerariesList = () => {
 
       {/* Stats */}
       <div className="card">
-        <div className="flex items-center justify-between">
-          <span className="text-gray-600">
+        <div className="search-stats">
+          <span className="stats-text">
             Showing {filteredItineraries.length} of {itineraries.length} itineraries
           </span>
           {searchTerm && (
@@ -89,7 +90,7 @@ const ItinerariesList = () => {
 
       {/* Itineraries Grid */}
       {filteredItineraries.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="itineraries-grid">
           {filteredItineraries.map((itinerary) => (
             <ItineraryCard
               key={itinerary._id}
@@ -101,12 +102,12 @@ const ItinerariesList = () => {
         </div>
       ) : (
         <div className="card">
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="empty-state">
+            <div className="empty-icon">🔍</div>
+            <h3 className="empty-title">
               {searchTerm ? "No matching itineraries" : "No itineraries found"}
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="empty-description">
               {searchTerm 
                 ? "Try adjusting your search terms" 
                 : "Get started by creating your first itinerary."
@@ -123,13 +124,13 @@ const ItinerariesList = () => {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Delete Itinerary</h3>
-            <p className="text-gray-600 mb-6">
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="modal-title">Delete Itinerary</h3>
+            <p className="modal-description">
               Are you sure you want to delete this itinerary? This action cannot be undone.
             </p>
-            <div className="flex space-x-3 justify-end">
+            <div className="modal-actions">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="btn btn-secondary"

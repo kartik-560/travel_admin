@@ -1,30 +1,31 @@
 import React from "react";
+import './ItineraryCard.css';
 
 const ItineraryCard = ({ itinerary, onEdit, onDelete }) => (
-  <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
-    <h3 className="text-xl font-semibold text-gray-900 mb-3">{itinerary.title}</h3>
-    <p className="text-gray-600 mb-4 line-clamp-3">{itinerary.description}</p>
+  <div className="itinerary-card">
+    <h3 className="itinerary-title">{itinerary.title}</h3>
+    <p className="itinerary-description line-clamp-3">{itinerary.description}</p>
     
-    <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+    <div className="itinerary-meta">
+      <span className="badge badge-blue">
         {itinerary.duration || 'Not specified'}
       </span>
-      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">
+      <span className="badge badge-green">
         {itinerary.price || 'TBD'}
       </span>
     </div>
 
     {itinerary.destinations && itinerary.destinations.length > 0 && (
-      <div className="mb-4">
-        <p className="text-sm font-medium text-gray-700 mb-2">Destinations:</p>
-        <div className="flex flex-wrap gap-1">
+      <div className="itinerary-destinations">
+        <p className="destinations-label">Destinations:</p>
+        <div className="destinations-list">
           {itinerary.destinations.slice(0, 3).map((dest, index) => (
-            <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+            <span key={index} className="badge badge-gray">
               {dest}
             </span>
           ))}
           {itinerary.destinations.length > 3 && (
-            <span className="text-xs text-gray-500">
+            <span className="destinations-more">
               +{itinerary.destinations.length - 3} more
             </span>
           )}
@@ -32,16 +33,16 @@ const ItineraryCard = ({ itinerary, onEdit, onDelete }) => (
       </div>
     )}
     
-    <div className="flex space-x-2">
+    <div className="itinerary-actions">
       <button
         onClick={() => onEdit(itinerary._id)}
-        className="flex-1 btn btn-primary"
+        className="btn btn-primary"
       >
         Edit
       </button>
       <button
         onClick={() => onDelete(itinerary._id)}
-        className="flex-1 btn btn-danger"
+        className="btn btn-danger"
       >
         Delete
       </button>

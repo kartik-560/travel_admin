@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -11,25 +12,23 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-gray-900 text-white flex flex-col">
-      <div className="p-6">
-        <h2 className="text-2xl font-bold text-blue-400">🧭 Travel Admin</h2>
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <h2 className="sidebar-title">🧭 Travel Admin</h2>
       </div>
       
-      <nav className="flex-1 px-4">
-        <ul className="space-y-2">
+      <nav className="sidebar-nav">
+        <ul className="sidebar-menu">
           {navItems.map((item) => (
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
-                  location.pathname === item.path
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                className={`sidebar-link ${
+                  location.pathname === item.path ? 'active' : ''
                 }`}
               >
-                <span className="text-xl">{item.icon}</span>
-                <span className="font-medium">{item.label}</span>
+                <span className="sidebar-icon">{item.icon}</span>
+                <span className="sidebar-label">{item.label}</span>
               </Link>
             </li>
           ))}

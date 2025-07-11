@@ -1,16 +1,17 @@
 import React from 'react';
+import './Navbar.css';
 
 const Navbar = () => {
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Travel Admin Panel</h1>
-        <div className="flex items-center space-x-4">
-          <div className="text-sm text-gray-600">
+    <header className="navbar">
+      <div className="navbar-content">
+        <h1 className="navbar-title">Travel Admin Panel</h1>
+        <div className="navbar-user">
+          <div className="navbar-welcome">
             Welcome back, Admin
           </div>
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-sm font-medium">A</span>
+          <div className="navbar-avatar">
+            <span>A</span>
           </div>
         </div>
       </div>
