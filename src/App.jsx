@@ -42,16 +42,28 @@ import EditItinerary from "./pages/EditItinerary";
 import "./index.css";
 
 const App = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // start closed for mobile
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    setSidebarOpen((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
   };
 
   return (
     <Router>
       <div className={`app-container ${sidebarOpen ? "sidebar-open" : ""}`}>
-        <Sidebar isOpen={sidebarOpen} />
+        {/* Mobile overlay */}
+        {sidebarOpen && (
+          <div className="sidebar-overlay" onClick={closeSidebar} />
+        )}
+
+        {/* Sidebar */}
+        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+
+        {/* Main content */}
         <div className="main-content">
           <Navbar toggleSidebar={toggleSidebar} />
           <main className="page-content">

@@ -139,7 +139,7 @@ const ItinerariesList = () => {
                 : "Get started by creating your first itinerary."}
             </p>
             {!searchTerm && (
-              <Link to="/create" className="btn btn-primary">
+              <Link to="/itineraries/create" className="btn btn-primary">
                 Create Itinerary
               </Link>
             )}

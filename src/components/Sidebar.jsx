@@ -13,10 +13,11 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* Overlay for mobile */}
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
 
-      <div className={`sidebar ${isOpen ? "sidebar-mobile open" : "sidebar-mobile"}`}>
+      {/* Mobile Sidebar */}
+      <div className={`sidebar-mobile ${isOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <h2 className="sidebar-title">🧭 Travel Admin</h2>
         </div>
@@ -27,7 +28,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <Link
                   to={item.path}
                   className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
-                  onClick={onClose}
+                  onClick={onClose} // Close sidebar on click
                 >
                   <span className="sidebar-icon">{item.icon}</span>
                   <span className="sidebar-label">{item.label}</span>
@@ -38,7 +39,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         </nav>
       </div>
 
-      {/* Desktop Sidebar (always visible) */}
+      {/* Desktop Sidebar */}
       <div className="sidebar desktop-only">
         <div className="sidebar-header">
           <h2 className="sidebar-title">🧭 Travel Admin</h2>
