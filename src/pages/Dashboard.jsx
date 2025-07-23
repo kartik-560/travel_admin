@@ -115,60 +115,57 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-
-       
       </div>
 
       {/* Recent Itineraries */}
-     {Object.keys(stats.groupedItineraries || {}).map((category) => (
-  <div className="card" key={category}>
-    <div className="flex items-center justify-between mb-6">
-      <h2 className="text-xl font-bold text-gray-900">
-        {category} Itineraries
-      </h2>
-      <Link to="/itineraries" className="btn btn-secondary">
-        View All
-      </Link>
-    </div>
+      {Object.keys(stats.groupedItineraries || {}).map((category) => (
+        <div className="card" key={category}>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">
+              {category} Itineraries
+            </h2>
+            <Link to="/itineraries" className="btn btn-secondary">
+              View All
+            </Link>
+          </div>
 
-    <div className="recent-list">
-      {stats.groupedItineraries[category].slice(0, 3).map((itinerary) => (
-        <div
-          key={itinerary._id || itinerary.id} // ✅ unique key here
-          className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-        >
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            {itinerary.title}
-          </h3>
-          <p className="text-gray-600 mb-3">
-            {itinerary.subTitle?.substring(0, 100)}...
-          </p>
-          <div className="flex items-center justify-between">
-            <div className="flex space-x-4 text-sm text-gray-500">
-              <span>Duration: {itinerary.duration}</span>
-              <span>Price: {itinerary.price || "N/A"}</span>
-            </div>
-            <div className="flex gap-2">
-              <Link
-                to={`/itineraries/edit/${itinerary._id}`}
-                className="btn btn-primary"
+          <div className="recent-list">
+            {stats.groupedItineraries[category].slice(0, 3).map((itinerary) => (
+              <div
+                key={itinerary._id || itinerary.id} // ✅ unique key here
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
-                Edit
-              </Link>
-              <button
-                onClick={() => handleDelete(itinerary._id)}
-                className="btn btn-danger"
-              >
-                Delete
-              </button>
-            </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {itinerary.title}
+                </h3>
+                <p className="text-gray-600 mb-3">
+                  {itinerary.subTitle?.substring(0, 100)}...
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex space-x-4 text-sm text-gray-500">
+                    <span>Duration: {itinerary.duration}</span>
+                    <span>Price: {itinerary.price || "N/A"}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/itineraries/edit/${itinerary._id}`}
+                      className="btn btn-primary"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(itinerary._id)}
+                      className="btn btn-danger"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ))}
-    </div>
-  </div>
-))}
-
     </div>
   );
 };
