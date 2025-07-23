@@ -120,10 +120,8 @@ const Dashboard = () => {
       {/* Recent Itineraries */}
       {Object.keys(stats.groupedItineraries || {}).map((category) => (
         <div className="card" key={category}>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900">
-              {category} Itineraries
-            </h2>
+          <div className="card-header">
+            <h2>{category} Itineraries</h2>
             <Link to="/itineraries" className="btn btn-secondary">
               View All
             </Link>
@@ -146,15 +144,15 @@ const Dashboard = () => {
                     <span>Duration: {itinerary.duration}</span>
                     <span>Price: {itinerary.price || "N/A"}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="btn-group">
                     <Link
-                      to={`/itineraries/edit/${itinerary._id}`}
+                      to={`/itineraries/edit/${itinerary.id}`}
                       className="btn btn-primary"
                     >
                       Edit
                     </Link>
                     <button
-                      onClick={() => handleDelete(itinerary._id)}
+                      onClick={() => handleDelete(itinerary.id)}
                       className="btn btn-danger"
                     >
                       Delete
