@@ -1,11 +1,31 @@
 .sidebar {
   width: 256px;
-  background-color: #111827;
-  color: white;
-  display: flex;
-  flex-direction: column;
+  min-width: 256px;
   height: 100vh;
+  background-color: #0f172a;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
 }
+
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0);
+    position: relative;
+    z-index: auto;
+  }
+}
+
 
 .sidebar-header {
   padding: 24px;
@@ -74,5 +94,28 @@
   
   .sidebar-title {
     font-size: 20px;
+  }
+}
+
+/* Hide mobile sidebar on desktop */
+.sidebar-mobile {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .sidebar-mobile {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
   }
 }

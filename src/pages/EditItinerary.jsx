@@ -1,134 +1,175 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { getItinerary, updateItinerary } from "../api/itineraries";
-import './EditItinerary.css';
-
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getTrip, updateTrip } from "../api/trips";
+import imageCompression from "browser-image-compression";
+import "./styles/EditItinerary.css";
 const EditItinerary = () => {
   const { id } = useParams();
+  // console.log("Fetched ID:", id);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",
-    description: "",
+    subTitle: "",
+    maxElevation: "",
     duration: "",
-    price: "",
-    destinations: "",
+    distance: "",
+    difficulty: "",
+    startPoint: "",
+    endPoint: "",
+    category: "",
+    destinations: [],
+    travel_description: "",
     highlights: "",
+    images: [],
+    what_to_expect: [],
+    days: [],
   });
   const [loading, setLoading] = useState(false);
-  const [fetchLoading, setFetchLoading] = useState(true);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-  // const { id } = useParams();
-  const location = useLocation();
 
-  console.log("🛬 EditItinerary mounted");
-  console.log("🧭 Current path:", location.pathname);
-  console.log("🆔 useParams ID:", id);
   useEffect(() => {
-    const fetchItinerary = async () => {
-      console.log("Fetching itinerary for:", id);
+    const fetchTrip = async () => {
       try {
-        const res = await getItinerary(id);
-        const data = res.data;
-        setForm({
-          title: data.title || "",
-          description: data.description || "",
-          duration: data.duration || "",
-          price: data.price || "",
-          destinations: Array.isArray(data.destinations)
-            ? data.destinations.join(", ")
-            : data.destinations || "",
-          highlights: Array.isArray(data.highlights)
-            ? data.highlights.join(", ")
-            : data.highlights || "",
-        });
-      } catch (error) {
-        console.error("Error fetching itinerary:", error);
-        setErrors({ fetch: "Failed to load itinerary data." });
-      } finally {
-        setFetchLoading(false);
+        const { data } = await getTrip(id);
+        setForm(data);
+      } catch (err) {
+        console.error("Failed to fetch itinerary:", err);
       }
     };
 
-    fetchItinerary();
+    fetchTrip();
   }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: "" });
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const MAX_IMAGE_MB = 2;
+  const MAX_TOTAL_KB = 6000;
+
+  const handleBase64ImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+
+    let totalKB = form.images.reduce((sum, img) => {
+      return sum + Math.ceil((img.length * 3) / 4 / 1024);
+    }, 0);
+
+    for (let file of files) {
+      if (!file.type.startsWith("image/")) {
+        alert("Only image files are allowed.");
+        continue;
+      }
+
+      let fileToProcess = file;
+
+      // Compress only if file size > 1MB
+      if (file.size > 1 * 1024 * 1024) {
+        alert("Image is larger than 1MB. Compressing...");
+
+        try {
+          fileToProcess = await imageCompression(file, {
+            maxSizeMB: 0.35,
+            maxWidthOrHeight: 1280,
+            useWebWorker: true,
+          });
+        } catch (err) {
+          console.error("Compression failed:", err);
+          continue;
+        }
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        const kbSize = Math.ceil((base64.length * 3) / 4 / 1024);
+
+        if (totalKB + kbSize > MAX_TOTAL_KB) {
+          alert("Cannot upload — total image size will exceed 6MB.");
+          return;
+        }
+
+        totalKB += kbSize;
+
+        setForm((prevForm) => ({
+          ...prevForm,
+          images: [...prevForm.images, base64],
+        }));
+      };
+
+      reader.readAsDataURL(fileToProcess);
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!form.title.trim()) newErrors.title = "Title is required";
-    if (!form.description.trim())
-      newErrors.description = "Description is required";
-    if (!form.duration.trim()) newErrors.duration = "Duration is required";
-    if (!form.price.trim()) newErrors.price = "Price is required";
+  const removeImage = (index) => {
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+  };
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleExpectChange = (index, field, value) => {
+    const updated = [...form.what_to_expect];
+    updated[index][field] = value;
+    setForm((prev) => ({ ...prev, what_to_expect: updated }));
+  };
+
+  const addExpect = () => {
+    setForm((prev) => ({
+      ...prev,
+      what_to_expect: [
+        ...prev.what_to_expect,
+        { expect_title: "", expect_description: "" },
+      ],
+    }));
+  };
+
+  const handleDayChange = (index, field, value) => {
+    const updated = [...form.days];
+    updated[index][field] = value;
+    setForm((prev) => ({ ...prev, days: updated }));
+  };
+
+  const addDay = () => {
+    setForm((prev) => ({
+      ...prev,
+      days: [
+        ...prev.days,
+        {
+          day: "",
+          description: "",
+          distance: "",
+          duration: "",
+          highlights: "",
+        },
+      ],
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
     setLoading(true);
+    setErrors({});
     try {
-      await updateItinerary(id, {
-        ...form,
-        destinations: form.destinations
-          .split(",")
-          .map((d) => d.trim())
-          .filter((d) => d),
-        highlights: form.highlights
-          .split(",")
-          .map((h) => h.trim())
-          .filter((h) => h),
-      });
+      await updateTrip(id, form);
       navigate("/itineraries");
     } catch (error) {
-      console.error("Error updating itinerary:", error);
-      setErrors({ submit: "Failed to update itinerary. Please try again." });
+      console.error("Update failed", error);
+      setErrors({ submit: "Failed to update itinerary" });
     } finally {
       setLoading(false);
     }
   };
 
-  if (fetchLoading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-      </div>
-    );
-  }
-
-  if (errors.fetch) {
-    return (
-      <div className="card">
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">❌</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Itinerary</h3>
-          <p className="text-gray-600 mb-4">{errors.fetch}</p>
-          <button
-            onClick={() => navigate("/itineraries")}
-            className="btn btn-primary"
-          >
-            Back to Itineraries
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
 
   return (
-    <div className="edit-itinerary">
-      <div className="edit-header">
-        <h1 className="edit-title">Edit Itinerary</h1>
+    <div className="create-itinerary">
+      <div className="create-header">
+        <h1 className="create-title">Edit Itinerary</h1>
         <button
           onClick={() => navigate("/itineraries")}
           className="btn btn-secondary"
@@ -138,109 +179,236 @@ const EditItinerary = () => {
       </div>
 
       <div className="card">
-        <form onSubmit={handleSubmit} className="edit-form">
+        <form onSubmit={handleSubmit} className="create-form">
           {errors.submit && (
-            <div className="alert alert-error">
-              {errors.submit}
+            <div className="alert alert-error">{errors.submit}</div>
+          )}
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="category">
+              Category
+            </label>
+            <select
+              name="category"
+              id="category"
+              value={form.category}
+              onChange={handleSelectChange}
+              className="form-input"
+            >
+              <option value="Adventure & Trekking">Adventure & Trekking</option>
+              <option value="Cultural & Heritage Tours">
+                Cultural & Heritage Tours
+              </option>
+              <option value="Leisure & Offbeat Escapes">
+                Leisure & Offbeat Escapes
+              </option>
+              <option value="Spiritual & Wellness Retreats">
+                Spiritual & Wellness Retreats
+              </option>
+            </select>
+          </div>
+          {/* Text Fields */}
+          {Object.keys(form)
+            .filter((k) => !["what_to_expect", "days", "images"].includes(k))
+            .map((key) => (
+              <div key={key} className="form-group">
+                <label htmlFor={key} className="form-label">
+                  {key.replace(/_/g, " ")}
+                </label>
+                {key === "travel_description" || key === "highlights" ? (
+                  <textarea
+                    id={key}
+                    name={key}
+                    rows={3}
+                    value={form[key]}
+                    onChange={handleChange}
+                    className={`form-input ${errors[key] ? "error" : ""}`}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    id={key}
+                    name={key}
+                    value={form[key]}
+                    onChange={handleChange}
+                    className={`form-input ${errors[key] ? "error" : ""}`}
+                  />
+                )}
+                {errors[key] && <p className="form-error">{errors[key]}</p>}
+              </div>
+            ))}
+
+          {/* Image Upload */}
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            className="form-input"
+            onChange={handleBase64ImageUpload}
+          />
+          {form.images.length > 0 && (
+            <div style={{ marginTop: 16 }}>
+              {form.images.map((img, index) => {
+                if (!img || img.length < 100) return null; // Skip broken images
+
+                const sizeKB = Math.ceil((img.length * 3) / 4 / 1024);
+
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      marginBottom: 10,
+                      padding: 8,
+                      border: "1px solid #e5e7eb",
+                      borderRadius: 4,
+                      maxWidth: 300,
+                    }}
+                  >
+                    <img
+                      src={img}
+                      alt={`img-${index}`}
+                      style={{
+                        width: "100%",
+                        maxHeight: "180px",
+                        objectFit: "cover",
+                        borderRadius: 6,
+                        marginBottom: 8,
+                      }}
+                    />
+                    <p style={{ margin: 0, fontSize: 14 }}>
+                      <strong>Image {index + 1}</strong> — {sizeKB} KB
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="btn btn-danger"
+                      style={{ marginTop: 6 }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           )}
 
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              className={`form-input ${errors.title ? 'border-red-500' : ''}`}
-              placeholder="Enter itinerary title"
-            />
-            {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
+          {/* What to Expect */}
+          <div className="form-group">
+            <label className="form-label">What to Expect</label>
+            {Array.isArray(form.what_to_expect) &&
+              form.what_to_expect.map((item, index) => (
+                <div
+                  key={index}
+                  className="form-group"
+                  style={{
+                    border: "1px solid #e5e7eb",
+                    padding: "12px",
+                    marginBottom: "12px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    className="form-input"
+                    value={item.expect_title}
+                    onChange={(e) =>
+                      handleExpectChange(index, "expect_title", e.target.value)
+                    }
+                  />
+                  <textarea
+                    rows={2}
+                    placeholder="Description"
+                    className="form-input"
+                    value={item.expect_description}
+                    onChange={(e) =>
+                      handleExpectChange(
+                        index,
+                        "expect_description",
+                        e.target.value
+                      )
+                    }
+                  />
+                </div>
+              ))}
+
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={addExpect}
+            >
+              + Add More
+            </button>
           </div>
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={4}
-              value={form.description}
-              onChange={handleChange}
-              className={`form-input ${errors.description ? 'border-red-500' : ''}`}
-              placeholder="Describe the itinerary in detail"
-            />
-            {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
-                Duration *
-              </label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                value={form.duration}
-                onChange={handleChange}
-                className={`form-input ${errors.duration ? 'border-red-500' : ''}`}
-                placeholder="e.g., 7 days, 2 weeks"
-              />
-              {errors.duration && <p className="mt-1 text-sm text-red-600">{errors.duration}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                Price *
-              </label>
-              <input
-                type="text"
-                id="price"
-                name="price"
-                value={form.price}
-                onChange={handleChange}
-                className={`form-input ${errors.price ? 'border-red-500' : ''}`}
-                placeholder="e.g., $1,500, €2,000"
-              />
-              {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="destinations" className="block text-sm font-medium text-gray-700 mb-2">
-              Destinations
-            </label>
-            <input
-              type="text"
-              id="destinations"
-              name="destinations"
-              value={form.destinations}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Paris, Rome, Barcelona (comma-separated)"
-            />
-            <p className="mt-1 text-sm text-gray-500">Separate multiple destinations with commas</p>
-          </div>
-
-          <div>
-            <label htmlFor="highlights" className="block text-sm font-medium text-gray-700 mb-2">
-              Highlights
-            </label>
-            <textarea
-              id="highlights"
-              name="highlights"
-              rows={3}
-              value={form.highlights}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Eiffel Tower visit, Colosseum tour, Beach relaxation (comma-separated)"
-            />
-            <p className="mt-1 text-sm text-gray-500">Separate multiple highlights with commas</p>
+          {/* Days Plan */}
+          <div className="form-group">
+            <label className="form-label">Day-wise Plan</label>
+            {form.days.map((item, index) => (
+              <div
+                key={index}
+                className="form-group"
+                style={{
+                  border: "1px solid #e5e7eb",
+                  padding: "12px",
+                  marginBottom: "12px",
+                  borderRadius: "6px",
+                }}
+              >
+                <input
+                  type="number"
+                  placeholder="Day Number"
+                  className="form-input"
+                  value={item.day}
+                  onChange={(e) =>
+                    handleDayChange(index, "day", parseInt(e.target.value))
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Description"
+                  className="form-input"
+                  value={item.description}
+                  onChange={(e) =>
+                    handleDayChange(index, "description", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Distance"
+                  className="form-input"
+                  value={item.distance}
+                  onChange={(e) =>
+                    handleDayChange(index, "distance", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Duration"
+                  className="form-input"
+                  value={item.duration}
+                  onChange={(e) =>
+                    handleDayChange(index, "duration", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Highlights (comma-separated)"
+                  className="form-input"
+                  value={item.highlights}
+                  onChange={(e) =>
+                    handleDayChange(index, "highlights", e.target.value)
+                  }
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={addDay}
+            >
+              + Add Day
+            </button>
           </div>
 
           <div className="form-actions">

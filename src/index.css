@@ -712,3 +712,49 @@ body {
     flex-direction: column;
   }
 }
+
+
+.app-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 256px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-close {
+  transform: translateX(-100%);
+}
+
+.main-content {
+  flex: 1;
+}
+
+.toggle-button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 16px;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .toggle-button {
+    display: block;
+  }
+
+  .sidebar {
+    position: absolute;
+    z-index: 1000;
+    height: 100vh;
+    background: #111827;
+    transform: translateX(-100%);
+  }
+
+  .app-container.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+}
