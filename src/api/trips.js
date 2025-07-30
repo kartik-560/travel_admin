@@ -7,21 +7,21 @@ const api = axios.create({
 });
 
 export const getTrips = async () => {
-  return api.get("/trips");
+  return api.get("/api/trips");
 };
 
 export const getTrip = async (id) => {
-  return api.get(`/trips/${id}`);
+  return api.get(`/api/trips/${id}`);
 };
 
 export const createTrip = async (data) => {
-  return api.post("/trips", data);
+  return api.post("/api/trips", data);
 };
 
 export const updateTrip = async (id, data) => {
-  return api.put(`/trips/${id}`, data);
+  return api.put(`/api/trips/${id}`, data);
 };
 
 export const deleteTrip = async (id) => {
-  return api.delete(`/trips/${id}`);
+  return api.delete(`/api/trips/${id}`);
 };
