@@ -10,6 +10,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: "/itineraries", label: "Itineraries", icon: "🗺️" },
     { path: "/itineraries/create", label: "Create New", icon: "➕" },
     { path: "/image/upload", label: "Image Add", icon: "➕" },
+    { path: "/adminPhotos", label: "Photos", icon: "🖼️" },
+
   ];
 
   return (

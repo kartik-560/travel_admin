@@ -41,7 +41,8 @@ import CreateItinerary from "./pages/CreateItinerary";
 import EditItinerary from "./pages/EditItinerary";
 import "./index.css";
 import PhotoGallary from "./pages/PhotoGallary";
-
+import AdminPhotos from "./pages/AdminPhotos";
+import EditPhotoGallery from "./pages/EditPhotoGallery";
 const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false); // start closed for mobile
 
@@ -74,6 +75,8 @@ const App = () => {
               <Route path="/itineraries/create" element={<CreateItinerary />} />
               <Route path="/itineraries/edit/:id" element={<EditItinerary />} />
               <Route path="/image/upload" element={<PhotoGallary />} />
+              <Route path="/adminPhotos" element={<AdminPhotos />} />
+              <Route path="/photo/edit/:id" element={<EditPhotoGallery />} />
             </Routes>
           </main>
         </div>
