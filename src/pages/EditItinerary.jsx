@@ -31,14 +31,46 @@ const EditItinerary = () => {
     const fetchTrip = async () => {
       try {
         const { data } = await getTrip(id);
-        setForm(data);
+
+        const normalized = {
+          // defaults for anything missing
+          title: "",
+          subTitle: "",
+          maxElevation: "",
+          duration: "",
+          distance: "",
+          difficulty: "",
+          startPoint: "",
+          endPoint: "",
+          category: "",
+          destinations: [],
+          travel_description: "",
+          highlights: "",
+          images: [],
+          what_to_expect: [],
+          days: [],
+          // overwrite with server values
+          ...data,
+        };
+
+        // force arrays to be arrays
+        normalized.images = Array.isArray(data?.images) ? data.images : [];
+        normalized.what_to_expect = Array.isArray(data?.what_to_expect)
+          ? data.what_to_expect
+          : [];
+        normalized.days = Array.isArray(data?.days) ? data.days : [];
+        normalized.destinations = Array.isArray(data?.destinations)
+          ? data.destinations
+          : [];
+
+        setForm(normalized);
       } catch (err) {
         console.error("Failed to fetch itinerary:", err);
       }
     };
-
     fetchTrip();
   }, [id]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,57 +141,89 @@ const EditItinerary = () => {
   };
 
   const handleExpectChange = (index, field, value) => {
-    const updated = [...form.what_to_expect];
-    updated[index][field] = value;
-    setForm((prev) => ({ ...prev, what_to_expect: updated }));
+    setForm(prev => {
+      const curr = Array.isArray(prev.what_to_expect) ? [...prev.what_to_expect] : [];
+      const item = curr[index] ?? { expect_title: "", expect_description: "" };
+      curr[index] = { ...item, [field]: value };
+      return { ...prev, what_to_expect: curr };
+    });
   };
 
   const addExpect = () => {
-    setForm((prev) => ({
-      ...prev,
-      what_to_expect: [
-        ...prev.what_to_expect,
-        { expect_title: "", expect_description: "" },
-      ],
-    }));
+    setForm(prev => {
+      const curr = Array.isArray(prev.what_to_expect) ? prev.what_to_expect : [];
+      return {
+        ...prev,
+        what_to_expect: [...curr, { expect_title: "", expect_description: "" }],
+      };
+    });
   };
 
   const handleDayChange = (index, field, value) => {
-    const updated = [...form.days];
-    updated[index][field] = value;
-    setForm((prev) => ({ ...prev, days: updated }));
+    setForm(prev => {
+      const curr = Array.isArray(prev.days) ? [...prev.days] : [];
+      const item = curr[index] ?? { day: "", description: "", distance: "", duration: "", highlights: "" };
+      curr[index] = { ...item, [field]: value };
+      return { ...prev, days: curr };
+    });
   };
 
   const addDay = () => {
-    setForm((prev) => ({
-      ...prev,
-      days: [
-        ...prev.days,
-        {
-          day: "",
-          description: "",
-          distance: "",
-          duration: "",
-          highlights: "",
-        },
-      ],
-    }));
+    setForm(prev => {
+      const curr = Array.isArray(prev.days) ? prev.days : [];
+      return {
+        ...prev,
+        days: [
+          ...curr,
+          { day: "", description: "", distance: "", duration: "", highlights: "" },
+        ],
+      };
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrors({});
-    try {
-      await updateTrip(id, form);
-      navigate("/itineraries");
-    } catch (error) {
-      console.error("Update failed", error);
-      setErrors({ submit: "Failed to update itinerary" });
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setErrors({});
+
+  try {
+    // sanitize/coerce
+    const payload = {
+      ...form,
+      // ensure arrays are arrays
+      images: Array.isArray(form.images) ? form.images : [],
+      what_to_expect: (Array.isArray(form.what_to_expect) ? form.what_to_expect : [])
+        // if API expects {title, description}, map keys here:
+        .map(x => ({
+          title: x.title ?? x.expect_title ?? "",
+          description: x.description ?? x.expect_description ?? "",
+        })),
+      days: (Array.isArray(form.days) ? form.days : []).map(d => ({
+        day: typeof d.day === "string" ? parseInt(d.day, 10) || 0 : d.day || 0,
+        description: d.description ?? "",
+        distance: d.distance ?? "",
+        duration: d.duration ?? "",
+        // if API expects an array, split by comma; if it expects a string, keep as is
+        highlights: Array.isArray(d.highlights)
+          ? d.highlights
+          : (d.highlights ? d.highlights.split(",").map(s => s.trim()).filter(Boolean) : []),
+      })),
+      // numeric coercions if needed:
+      maxElevation: form.maxElevation?.toString?.() ?? "",
+      distance: form.distance?.toString?.() ?? "",
+      duration: form.duration?.toString?.() ?? "",
+    };
+
+    await updateTrip(id, payload);
+    navigate("/itineraries");
+  } catch (error) {
+    console.error("Update failed", error);
+    setErrors({ submit: "Failed to update itinerary" });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
