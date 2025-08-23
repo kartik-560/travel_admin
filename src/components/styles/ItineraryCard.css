@@ -15,8 +15,8 @@
 .card-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* aligns cards to the left */
-  gap: 24px; /* spacing between cards */
+  justify-content: flex-start;
+  gap: 24px; 
   padding: 20px;
 }
 

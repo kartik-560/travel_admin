@@ -1,4 +1,4 @@
-/* ===== Reset and Base Styles ===== */
+
 * {
   margin: 0;
   padding: 0;
@@ -16,10 +16,10 @@ body {
   line-height: 1.6;
 }
 
-/* ===== App Layout ===== */
+
 .app-container {
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
   background-color: #f9fafb;
 }
 
@@ -30,14 +30,14 @@ body {
   overflow: hidden;
 }
 
-/* Push content when sidebar is fixed on desktop */
+
 @media (min-width: 769px) {
   .main-content {
-    margin-left: 256px; /* Sidebar width */
+    margin-left: 256px; 
   }
 }
 
-/* Scrollable inner page content */
+
 .page-content {
   flex: 1;
   overflow-y: auto;
@@ -50,7 +50,7 @@ body {
   }
 }
 
-/* ===== Sidebar (Shared) ===== */
+
 .sidebar {
   width: 256px;
   min-width: 256px;
@@ -59,7 +59,7 @@ body {
   transition: transform 0.3s ease;
 }
 
-/* Desktop sidebar always shown */
+
 @media (min-width: 769px) {
   .sidebar {
     position: fixed;
@@ -70,7 +70,7 @@ body {
   }
 }
 
-/* Mobile sidebar hidden by default */
+
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -85,7 +85,7 @@ body {
   }
 }
 
-/* Overlay for mobile */
+
 .sidebar-overlay {
   position: fixed;
   inset: 0;
@@ -100,7 +100,7 @@ body {
   }
 }
 
-/* Toggle Button */
+
 .toggle-button {
   font-size: 24px;
   background: none;
@@ -117,7 +117,7 @@ body {
   }
 }
 
-/* Optional: Prevent content scroll when sidebar is open on mobile */
+
 @media (max-width: 768px) {
   .sidebar-open body {
     overflow: hidden;
