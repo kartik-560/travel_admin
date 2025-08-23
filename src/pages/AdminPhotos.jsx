@@ -24,6 +24,14 @@ const AdminPhotos = () => {
     fetchPhotos();
   }, []);
 
+   if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
+
   const handleDelete = async (photoId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this gallery?"
