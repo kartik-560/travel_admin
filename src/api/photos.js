@@ -5,6 +5,8 @@ const api = axios.create({
   baseURL: config.API_BASE_URL,
 });
 
+
+
 // CREATE a new photo gallery
 export const createPhotoGallery = async (data) => {
   return api.post("/api/photos", data);
@@ -12,7 +14,11 @@ export const createPhotoGallery = async (data) => {
 
 // DELETE a photo gallery by ID
 export const deletePhotoGallery = async (id) => {
-  return api.delete(`/api/photos/${id}`);
+   const token = sessionStorage.getItem("basicToken");
+  if (!token) throw new Error("Not authenticated");
+  return api.delete(`/api/photos/${id}`, {
+      headers: { Authorization: token },
+  });
 };
 
 // ✅ GET a photo gallery by ID
