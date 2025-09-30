@@ -253,11 +253,15 @@ const CreateItinerary = () => {
                 Cultural & Heritage Tours
               </option>
               <option value="Leisure & Offbeat Escapes">
-                Leisure & Offbeat Escapes
+                Leisure Trips
               </option>
               <option value="Spiritual & Wellness Retreats">
                 Spiritual & Wellness Retreats
               </option>
+              <option value="Spiritual & Wellness Retreats">
+               Offbeat Escapes
+              </option>
+              
             </select>
           </div>
 

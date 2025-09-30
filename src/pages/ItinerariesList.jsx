@@ -8,7 +8,8 @@ import "./styles/ItinerariesList.css";
 const CATEGORIES = [
   "Adventure & Trekking",
   "Cultural & Heritage Tours",
-  "Leisure & Offbeat Escapes",
+  "Leisure Trips",
+  "Offbeat Escapes",
   "Spiritual & Wellness Retreats",
 ];
 

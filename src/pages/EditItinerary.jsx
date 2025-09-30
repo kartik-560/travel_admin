@@ -356,7 +356,8 @@ const EditItinerary = () => {
               <option value="">Select a category</option>
               <option value="Adventure & Trekking">Adventure & Trekking</option>
               <option value="Cultural & Heritage Tours">Cultural & Heritage Tours</option>
-              <option value="Leisure & Offbeat Escapes">Leisure & Offbeat Escapes</option>
+              <option value="Leisure & Offbeat Escapes">Leisure Trips</option>
+              <option value="Leisure & Offbeat Escapes">Offbeat Escapes</option>
               <option value="Spiritual & Wellness Retreats">Spiritual & Wellness Retreats</option>
             </select>
             {errors.category && <p className="form-error">{errors.category}</p>}
