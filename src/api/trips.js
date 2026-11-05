@@ -39,8 +39,17 @@ api.interceptors.request.use((cfg) => {
 // =============================
 // Trips API
 // =============================
-export const getTrips = () => api.get("/api/trips");
+export const getTrips = (params = { all: true }) => api.get("/api/trips", { params });
 export const getTrip = (id) => api.get(`/api/trips/${id}`);
 export const createTrip = (data) => api.post("/api/trips", data);
 export const updateTrip = (id, data) => api.put(`/api/trips/${id}`, data);
 export const deleteTrip = (id) => api.delete(`/api/trips/${id}`);
+export const updateTripStatus = (id, status) => api.patch(`/api/trips/${id}/status`, { status });
+
+// =============================
+// Categories API
+// =============================
+export const getCategories = () => api.get("/api/categories");
+export const createCategory = (data) => api.post("/api/categories", data);
+export const updateCategory = (id, data) => api.put(`/api/categories/${id}`, data);
+export const deleteCategory = (id) => api.delete(`/api/categories/${id}`);
