@@ -11,6 +11,7 @@ import AdminPhotos from "./pages/AdminPhotos";
 import EditPhotoGallery from "./pages/EditPhotoGallery";
 import UserImpressions from "./pages/UserImpressions";
 import ManageCategories from "./pages/ManageCategories";
+import ManageTestimonials from "./pages/ManageTestimonials";
 import RequireAuth from "./components/RequireAuth";
 import Login from "./pages/Login";
 
@@ -110,6 +111,14 @@ const AppLayout = () => {
               element={
                 <RequireAuth>
                   <ManageCategories />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/testimonials"
+              element={
+                <RequireAuth>
+                  <ManageTestimonials />
                 </RequireAuth>
               }
             />

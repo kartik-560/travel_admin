@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Eye,
   Tag,
+  MessageSquareQuote,
 } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -21,6 +22,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: "/impressions", label: "User Impressions", icon: Eye },
     { path: "/itineraries", label: "Itineraries", icon: Map },
     { path: "/categories", label: "Categories", icon: Tag },
+    { path: "/testimonials", label: "Testimonials", icon: MessageSquareQuote },
     { path: "/itineraries/create", label: "Create Itinerary", icon: PlusCircle },
     { path: "/image/upload", label: "Upload Photos", icon: ImagePlus },
     { path: "/adminPhotos", label: "Photo Manager", icon: Images },
